@@ -1,13 +1,11 @@
 "use client"
-import Pagination from "@/components/pagination/pagination";
-import {useUserLessonMenu} from "@/hooks/useUserLessonMenu";
+import Pagination from "@/components/ui/pagination/pagination";
 
 export default function Home() {
-    const lessons = useUserLessonMenu()
 
     return (
         <>
-            {lessons && <main className={"w-full bg-gray-200 flex justify-center items-center"}>
+            <main className={"w-full bg-gray-200 flex justify-center items-center"}>
                 <section className={"w-3/4 h-3/4 p-1 bg-white rounded-lg"}>
                     <div className={"pt-2 pl-2 mb-8"}>
                         <button
@@ -26,7 +24,7 @@ export default function Home() {
 
                     </section>
                 </section>
-            </main>}
+            </main>
         </>
     );
 }

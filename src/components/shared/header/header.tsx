@@ -22,9 +22,9 @@ const Header: FC<{isNavigation?: boolean}> = ({isNavigation = false}) => {
     <header className={"w-screen h-20 flex items-center bg-white max-w-full"}>
       <div
         className={"w-60 h-full relative bg-cover bg-center"}
-        style={{ backgroundImage: "url('/image/logoBG.jpg')" }}
+        style={{ backgroundImage: "url('/images/logoBG.jpg')" }}
       >
-        <Link href={""} className={""}>
+        <Link href={"/"} className={"min-w-18"}>
           <div
             className={"absolute left-1/3 top-1/2 tracking-wide -translate-y-1/2 text-2xl"}
           >
@@ -47,7 +47,7 @@ const Header: FC<{isNavigation?: boolean}> = ({isNavigation = false}) => {
           />
           <Link href="" className={"nav-icon"}>
             <Image
-                src={"/image/wolf.svg"}
+                src={"/images/wolf.svg"}
                 width={35}
                 height={35}
                 alt={"WebWolf"}

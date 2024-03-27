@@ -12,7 +12,7 @@ export default function NotFound() {
     >
       <div className={"p-4 flex items-center flex-col min-h-24 bg-red-500 gap-4"}>
         <div className={"flex justify-start items-center"}>
-          <Image src={"/image/logo.png"} alt={"Logo"} width={35} height={35} />
+          <Image src={"/images/logo.png"} alt={"Logo"} width={35} height={35} />
           <span className={"p-2 text-4xl"}>404</span>
         </div>
         <div>You&apos;re insecure</div>
