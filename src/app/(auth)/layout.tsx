@@ -10,7 +10,7 @@ export default function LoginLayout ({ children }: Readonly<HomeLayoutProps>) {
   return (
     <>
       <Header/>
-      <main className={'flex'}>
+      <main className={'flex h-full'}>
           <Aside/>
           {children}
       </main>

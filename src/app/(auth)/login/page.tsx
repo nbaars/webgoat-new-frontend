@@ -1,67 +1,88 @@
 "use client";
 
 import {login} from "@/lib/actions";
-import { useFormState } from 'react-dom';
-import Link from "next/link";
+import {useForm} from "react-hook-form";
+import {LoginSchema} from "@/schemas";
+import {useState, useTransition} from "react";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import FormCard from "@/components/ui/form-card/form-card";
+import FormButton from "@/components/ui/form-button/form-button";
+import RedirectLink from "@/components/ui/redirect-link/redirect-link";
+import FormInput from "@/components/ui/form-input/form-input";
+import {FormError} from "@/components/ui/form-error/form-error";
+import HorizontalLine from "@/components/ui/horizontal-line/hr";
+import { Form } from "@/components/ui/form-field/form-field";
 
 export default function Home() {
-    const [errorMessage, dispatch] = useFormState(login, undefined)
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
+    const [isPending, startTransition] = useTransition();
 
+    const form = useForm<z.infer<typeof LoginSchema>>({
+        defaultValues: {
+            username: "",
+            password: "",
+        },
+        mode: "onTouched",
+        resolver: zodResolver(LoginSchema),
+    });
+
+    const {
+        formState: { errors },
+    } = form;
+    const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+        setError("");
+        setSuccess("");
+        startTransition(async () => {
+            const res = await login(values)
+            setError(res?.error);
+            setSuccess(res?.success);
+        });
+    };
 
 
     return (
-      <div className={'w-full bg-gray-200 flex justify-center items-center'}>
-          <div className={'flex w-full flex-col h-full bg-gray-100 pt-10 pb-10 pl-4 pr-4 gap-6'}>
-              <div className={'font-light text-2xl text-black'}>
-                  Login
-                  <div className={'w-full h-[1px] bg-gray-200'}></div>
-              </div>
-              <form action={dispatch} className={'text-black flex flex-col w-64 h-72 ml-6 p-2 gap-3'}>
-                  <div className={'flex flex-col gap-2'}>
-                      <label htmlFor={'login'} className={'font-bold text-sm'}>
-                          Username
-                      </label>
-                      <input
-                          className={'w-full h-8 p-4 placeholder:text-sm shadow-inner rounded-md border-[1px] border-[#cccccc]'}
-                          id={'login'}
-                          type="text"
-                          name="username"
-                          placeholder="Username"
-                          autoComplete="off"
-                          required
-                      />
-                  </div>
+        <FormCard>
+            <Form {...form}>
+                <div className={'flex w-full flex-col min-h-60 h-screen pt-10 pb-10 pl-4 pr-4 gap-2'}>
+                    <div className={"text-xl"}>Login</div>
+                    <HorizontalLine/>
+                    <form className={"max-w-48 flex flex-col gap-4"} onSubmit={form.handleSubmit(onSubmit)}>
+                        <div>
+                            {!!error && <FormError errorText={error}/>}
+                            <FormInput
+                                control={form.control}
+                                disabled={isPending}
+                                error={errors.username?.message}
+                                label={'Username'}
+                                name="username"
+                                placeholder={"Username"}
+                                type="text"
+                            />
+                        </div>
+                        <FormInput
+                            control={form.control}
+                            disabled={isPending}
+                            error={errors.password?.message}
+                            name="password"
+                            label={'Password'}
+                            placeholder={"Password"}
+                            type="password"
+                        />
 
-                  <div className={'flex flex-col gap-2'}>
-                      <label htmlFor={'password'} className={'font-bold text-sm'}>
-                          Password
-                      </label>
-                      <input
-                          className={'w-full h-8 p-4 placeholder:text-sm shadow-inner rounded-md border-[1px] border-[#cccccc]'}
-                          id={'password'}
-                          type="password"
-                          name="password"
-                          placeholder="Password"
-                          autoComplete="off"
-                          required
-                      />
-                  </div>
+                        <div className={'flex flex-col gap-2 justify-center'}>
+                            <FormButton disabled={isPending} type={"submit"}>
+                                Sign in
+                            </FormButton>
 
-                  <div>
-                      <input className={'w-full cursor-pointer h-8 bg-[#428bca] hover:bg-blue-800 transition-colors ease-in-out rounded-md border-[1px] border-[#357ebd] text-white'}
-                             type="submit" value="Sign In"/>
-                  </div>
-
-                  <div className={'flex justify-center items-center max-h-32'}>
-                      <Link
-                          href={'/signup'}
-                          className={'text-center text-blue-500 text-sm font-bold hover:text-blue-800 transition-colors ease-in-out'}
-                      >
-                          Or create new account
-                      </Link>
-                  </div>
-              </form>
-          </div>
-      </div>
+                            <RedirectLink href={"/signup"} size={"normal"}>
+                                Or create new account
+                            </RedirectLink>
+                        </div>
+                    </form>
+                </div>
+            </Form>
+        </FormCard>
     );
 }
