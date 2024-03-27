@@ -59,9 +59,15 @@ const Aside: FC<{lesson?: any}> = ({lesson}) => {
     }
     setOpenned(index);
   };
-    console.log(lesson)
+  console.log(lesson)
+
+  if (!lesson) {
+      return (
+          <>Loading</>
+      )
+  }
   return (
-    <aside className={"min-w-60 min-h-screen bg-white flex flex-col"}>
+    <aside className={"min-w-60 h-full bg-white flex flex-col"}>
       {lesson && lesson.map((lesson, index) => {
         return (
           <DropDownMenu
